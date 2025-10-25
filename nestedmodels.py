@@ -38,5 +38,26 @@ def details(patient:Patient):
     print(patient.address)
 
 patient1=Patient(**patient_dict)
-print(patient1.address.pin)
-# details(patient1)
+# print(patient1.address.pin)
+# # details(patient1)
+
+#model_dump gives the dictionary of pydantic model object
+#we can use include attribute to show the respecive fields
+# temp=patient1.model_dump(include=['name'])
+#for state insdie adress then
+
+temp=patient1.model_dump(exclude={
+    'address':['state']
+})
+print(temp)
+#it gives dict
+print(type(temp))
+'''
+for json we 
+will use model_dump_json()
+'''
+
+# t=patient1.model_dump_json()
+# print(t)
+# print(type(t))
+
