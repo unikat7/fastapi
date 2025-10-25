@@ -1,4 +1,4 @@
-from pydantic import BaseModel,EmailStr,AnyUrl,Field,field_validator,model_validator
+from pydantic import BaseModel,EmailStr,AnyUrl,Field,field_validator,model_validator,computed_field
 from typing import List,Dict,Optional,Annotated
 
 class Patient(BaseModel):
@@ -13,6 +13,7 @@ class Patient(BaseModel):
     married:Annotated[bool,Field(default=None,description='is the patient married ot not')]
     allergies:Optional[List[str]]=None
     contact_details:Dict[str,str]
+    height:float
 
     @field_validator('email')
     @classmethod
@@ -41,17 +42,13 @@ class Patient(BaseModel):
         if model.age>60 and 'emergency' not in model.contact_details:
             raise ValueError('patients older than 60 muyst have an e,ergency contact number')
         return model
-
-
-
     
-    
-
-
-    
-
-        
-
+    @computed_field
+    @property
+    def calculate_bmi(self)->float:
+        #calculate_bmi act as a field name 
+        bmi=round(self.weight/(self.height**2),2)
+        return bmi
 
 
 def insert_patient_data(patient:Patient):
@@ -61,6 +58,8 @@ def insert_patient_data(patient:Patient):
     print(patient.married)
     print(patient.allergies)
     print(patient.linkedin_url)
+    #so here there is calculate_bmi
+    print(patient.calculate_bmi)
 
 
 
@@ -69,6 +68,7 @@ patient_info={
     'age':'65',
     'email':'abc@hdfc.com',
     'weight':75.2,
+    'height':1.72,
     'married':True,
     'linkedin_url':'https://www.linkedin.com/in/unika-tamang-1aa522290/',
     'allergies':['pollen','dust'],
