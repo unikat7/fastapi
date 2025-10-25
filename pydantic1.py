@@ -1,4 +1,4 @@
-from pydantic import BaseModel,EmailStr,AnyUrl,Field,field_validator
+from pydantic import BaseModel,EmailStr,AnyUrl,Field,field_validator,model_validator
 from typing import List,Dict,Optional,Annotated
 
 class Patient(BaseModel):
@@ -35,9 +35,19 @@ class Patient(BaseModel):
             return value
         else:
             raise ValueError("age less or greater")
-    
+
+    @model_validator(mode='after')
+    def validate_emergency_contact(cls,model):
+        if model.age>60 and 'emergency' not in model.contact_details:
+            raise ValueError('patients older than 60 muyst have an e,ergency contact number')
+        return model
+
+
 
     
+    
+
+
     
 
         
@@ -56,7 +66,7 @@ def insert_patient_data(patient:Patient):
 
 patient_info={
     'name':'u',
-    'age':'102',
+    'age':'65',
     'email':'abc@hdfc.com',
     'weight':75.2,
     'married':True,
@@ -64,7 +74,8 @@ patient_info={
     'allergies':['pollen','dust'],
     'contact_details':{
         'email':'abc@gmail.com',
-        'phone':'1234'
+        'phone':'1234',
+        'emergency':'1234'
     }
 
 
