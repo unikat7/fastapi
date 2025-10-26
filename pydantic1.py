@@ -6,7 +6,7 @@ class Patient(BaseModel):
     name:Annotated[str,Field(max_length=2,title='name of the patient',description='give name less than 50 character',examples=['Nitish','sita'])]
     age:int=Field(gt=0,le=120)
     linkedin_url:AnyUrl
-    email:EmailStr
+    email:str
     weight:Annotated[float,Field(gt=0,strict=True)]
     # weight:float=Field(gt=0)
     # married:bool=False
@@ -66,7 +66,7 @@ def insert_patient_data(patient:Patient):
 patient_info={
     'name':'u',
     'age':'65',
-    'email':'abc@hdfc.com',
+    'email':'abchdfc.com',
     'weight':75.2,
     'height':1.72,
     'married':True,
